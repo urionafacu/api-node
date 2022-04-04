@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { matchedData } from "express-validator";
 import { TracksModel } from "../models";
 import { handleHttpError } from "../utils/handleError";
+import { TracksModel as TrackModelType } from "../models/nosql/tracks";
 
 /**
  * Get all tracks
@@ -27,7 +28,7 @@ export const getItem = async (
 ): Promise<Response> => {
   try {
     const { id } = matchedData(req);
-    const data = await TracksModel.findById(id);
+    const data: TrackModelType | null = await TracksModel.findById(id);
 
     if (!data) {
       return handleHttpError(res, 404, "TRACK_NOT_FOUND");
@@ -48,7 +49,7 @@ export const createItem = async (
 ): Promise<Response> => {
   const body = matchedData(req);
   try {
-    const data = await TracksModel.create(body);
+    const data: TrackModelType = await TracksModel.create(body);
     return res.status(201).json({ data });
   } catch (error: any) {
     return handleHttpError(res, 500, "ERROR_IN_CREATE_TRACK", error.message);
@@ -65,7 +66,11 @@ export const updateItem = async (
   try {
     const { id, ...body } = matchedData(req);
 
-    const data = await TracksModel.findByIdAndUpdate(id, body, { new: true });
+    const data: TrackModelType | null = await TracksModel.findByIdAndUpdate(
+      id,
+      body,
+      { new: true }
+    );
 
     if (!data) {
       return handleHttpError(res, 404, "TRACK_NOT_FOUND");
@@ -85,12 +90,13 @@ export const deleteItem = async (
 ): Promise<Response> => {
   try {
     const { id } = matchedData(req);
-    const data = await TracksModel.findByIdAndDelete({ _id: id });
+    // @ts-ignore
+    const data = await TracksModel.delete({ _id: id });
 
     if (!data) {
       return handleHttpError(res, 404, "TRACK_NOT_FOUND");
     }
-    return res.status(204);
+    return res.status(204).json({});
   } catch (error: any) {
     return handleHttpError(res, 500, "ERROR_IN_DELETE_TRACK", error.message);
   }

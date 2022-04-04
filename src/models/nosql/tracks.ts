@@ -1,6 +1,19 @@
 import { Schema, model, Types } from "mongoose";
+import mongooseDelete from "mongoose-delete";
 
-const TracksSchema = new Schema(
+export type TracksModel = {
+  name: string;
+  album: string;
+  cover: string;
+  artist: string;
+  duration: {
+    start: number;
+    end: number;
+  };
+  mediaId?: Types.ObjectId;
+};
+
+const TracksSchema: Schema<TracksModel> = new Schema(
   {
     name: {
       type: String,
@@ -43,5 +56,9 @@ const TracksSchema = new Schema(
     versionKey: false,
   }
 );
+
+TracksSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+});
 
 export default model("tracks", TracksSchema);

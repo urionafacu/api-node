@@ -1,6 +1,20 @@
 import { Schema, model } from "mongoose";
+import mongooseDelete from "mongoose-delete";
 
-const UserSchema = new Schema(
+enum UserEnum {
+  ADMIN = "admin",
+  USER = "user",
+}
+
+type UserModel = {
+  name: string;
+  age: number;
+  email: string;
+  password: string;
+  role?: UserEnum;
+};
+
+const UserSchema: Schema<UserModel> = new Schema(
   {
     name: {
       type: String,
@@ -16,8 +30,8 @@ const UserSchema = new Schema(
       type: String,
     },
     role: {
-      type: ["admin", "user"],
-      default: "user",
+      type: [UserEnum.ADMIN, UserEnum.USER],
+      default: UserEnum.USER,
     },
   },
   {
@@ -25,5 +39,9 @@ const UserSchema = new Schema(
     versionKey: false,
   }
 );
+
+UserSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+});
 
 export default model("users", UserSchema);

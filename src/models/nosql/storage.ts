@@ -1,6 +1,12 @@
 import { Schema, model } from "mongoose";
+import mongooseDelete from "mongoose-delete";
 
-const StorageSchema = new Schema(
+type StorageModel = {
+  url: string;
+  filename: string;
+};
+
+const StorageSchema: Schema<StorageModel> = new Schema(
   {
     url: {
       type: String,
@@ -14,5 +20,9 @@ const StorageSchema = new Schema(
     versionKey: false,
   }
 );
+
+StorageSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+});
 
 export default model("storage", StorageSchema);
