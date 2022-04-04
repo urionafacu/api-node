@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
+import { matchedData } from "express-validator";
+import fs from "fs";
 import { StorageModel } from "../models";
 import { handleHttpError } from "../utils/handleError";
+import { StorageModel as StorageModelType } from "../models/nosql/storage";
 
 const PUBLIC_URL = process.env.PUBLIC_URL || "http://localhost:3000";
+const MEDIA_PATH = `${__dirname}/../storage`;
 
 /**
  * Get all files
@@ -12,7 +16,7 @@ export const getItems = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const data = await StorageModel.find({});
+    const data: StorageModelType[] = await StorageModel.find({});
     return res.status(200).send(data);
   } catch (error: any) {
     return handleHttpError(res, 500, "ERROR_GET_ITEMS", error.message);
@@ -22,7 +26,22 @@ export const getItems = async (
 /**
  * Get a file by id
  */
-export const getItem = (req: Request, res: Response): void => {};
+export const getItem = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { id } = matchedData(req);
+    const data: StorageModelType | null = await StorageModel.findById(id);
+
+    if (!data) {
+      return handleHttpError(res, 404, "ITEM_NOT_FOUND");
+    }
+    return res.status(200).json(data);
+  } catch (error: any) {
+    return handleHttpError(res, 500, "ERROR_GET_ITEMS", error.message);
+  }
+};
 
 /**
  * Create a new file
@@ -47,11 +66,27 @@ export const createItem = async (
 };
 
 /**
- * Update a file by id
- */
-export const updateItem = (req: Request, res: Response): void => {};
-
-/**
  * Delete a file by id
  */
-export const deleteItem = (req: Request, res: Response): void => {};
+export const deleteItem = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { id } = matchedData(req);
+    const data: StorageModelType | null = await StorageModel.findById(id);
+
+    if (!data) {
+      return handleHttpError(res, 404, "ITEM_NOT_FOUND");
+    }
+
+    const filePath = `${MEDIA_PATH}/${data.filename}`;
+
+    fs.unlinkSync(filePath);
+
+    await StorageModel.findByIdAndDelete(id);
+    return res.status(200).json(data);
+  } catch (error: any) {
+    return handleHttpError(res, 500, "ERROR_DELETE_ITEM", error.message);
+  }
+};

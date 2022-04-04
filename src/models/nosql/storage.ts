@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import mongooseDelete from "mongoose-delete";
 
-type StorageModel = {
+export type StorageModel = {
   url: string;
   filename: string;
 };
