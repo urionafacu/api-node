@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "esnext",
+		"strict": true,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"outDir": "dist",
+		"resolveJsonModule": true,
+		"baseUrl": "./src",
+		"allowJs": true,
+		"noEmit": true,
+		"lib": ["es2015"],
+		"paths": {
+      "app": ["./app"]
+    }
+	},
+	"include": [
+		"**/*.ts"
+	],
+	"exclude": [
+		"dist",
+		"node_modules"
+	],
+}
