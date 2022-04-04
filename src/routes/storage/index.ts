@@ -7,27 +7,42 @@ import {
   deleteItem,
 } from "../../controllers/storage";
 import { validatorGetItem } from "../../validators/storage";
+import authMiddleware from "../../middlewares/session";
+import checkRol from "../../middlewares/rol";
+import { UserEnum } from "../../models/nosql/users";
 
 const router = Router();
 
 /**
  * Get all files
  */
-router.get("/", getItems);
+router.get("/", authMiddleware, getItems);
 
 /**
  * Create a new file
  */
-router.post("/", upploadMiddleware.single("myfile"), createItem);
+router.post(
+  "/",
+  authMiddleware,
+  checkRol([UserEnum.ADMIN]),
+  upploadMiddleware.single("myfile"),
+  createItem
+);
 
 /**
  * Get a file by id
  */
-router.get("/:id", validatorGetItem, getItem);
+router.get("/:id", authMiddleware, validatorGetItem, getItem);
 
 /**
  * Delete a file by id
  */
-router.delete("/:id", validatorGetItem, deleteItem);
+router.delete(
+  "/:id",
+  authMiddleware,
+  checkRol([UserEnum.ADMIN]),
+  validatorGetItem,
+  deleteItem
+);
 
 export default router;

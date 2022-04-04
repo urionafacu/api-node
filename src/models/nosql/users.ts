@@ -1,12 +1,12 @@
 import { Schema, model } from "mongoose";
 import mongooseDelete from "mongoose-delete";
 
-enum UserEnum {
+export enum UserEnum {
   ADMIN = "admin",
   USER = "user",
 }
 
-type UserModel = {
+export type UsersModel = {
   name: string;
   age: number;
   email: string;
@@ -14,7 +14,7 @@ type UserModel = {
   role?: UserEnum;
 };
 
-const UserSchema: Schema<UserModel> = new Schema(
+const UserSchema: Schema<UsersModel> = new Schema(
   {
     name: {
       type: String,
@@ -28,6 +28,7 @@ const UserSchema: Schema<UserModel> = new Schema(
     },
     password: {
       type: String,
+      select: false,
     },
     role: {
       type: [UserEnum.ADMIN, UserEnum.USER],
