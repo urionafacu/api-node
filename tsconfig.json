@@ -1,27 +1,19 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"target": "esnext",
-		"strict": true,
-		"moduleResolution": "node",
-		"sourceMap": true,
-		"outDir": "dist",
-		"resolveJsonModule": true,
-		"baseUrl": "./src",
-		"allowJs": true,
-		"noEmit": true,
-		"lib": ["es2015"],
-		"paths": {
-      "app": ["./app"]
-    }
-	},
-	"include": [
-		"**/*.ts"
-	],
-	"exclude": [
-		"dist",
-		"node_modules"
-	],
+  "compilerOptions": {
+    "target": "es2016",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "./dist/**/*"
+  ]
 }
