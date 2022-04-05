@@ -8,8 +8,15 @@ import { MoviesModel } from 'models';
  */
 export const getItems = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const data = await MoviesModel.findAll();
-    return res.status(200).json(data);
+    // @ts-ignore
+    const user = req?.user?.toJSON();
+    const movies = await MoviesModel.findAll({
+      where: {
+        userId: user?.id,
+      },
+    });
+
+    return res.status(200).json(movies);
   } catch (error: any) {
     return handleHttpError(res, 500, 'ERROR_GET_MOVIES', error.message);
   }
@@ -24,12 +31,12 @@ export const getItem = async (req: Request, res: Response): Promise<Response> =>
     const data = await MoviesModel.findByPk(id);
 
     if (!data) {
-      return handleHttpError(res, 404, 'TRACK_NOT_FOUND');
+      return handleHttpError(res, 404, 'MOVIE_NOT_FOUND');
     }
 
     return res.status(200).json(data);
   } catch (error: any) {
-    return handleHttpError(res, 500, 'ERROR_GET_TRACK', error.message);
+    return handleHttpError(res, 500, 'ERROR_GET_MOVIE', error.message);
   }
 };
 
@@ -37,12 +44,18 @@ export const getItem = async (req: Request, res: Response): Promise<Response> =>
  * Create a new movie
  */
 export const createItem = async (req: Request, res: Response): Promise<Response> => {
-  const body = matchedData(req);
+  const { id } = matchedData(req);
+  // @ts-ignore
+  const { user } = req;
   try {
-    const data = await MoviesModel.create(body);
-    return res.status(201).json({ data });
+    const data = await MoviesModel.create({
+      userId: user?.id,
+      id,
+    });
+
+    return res.status(201).json(data);
   } catch (error: any) {
-    return handleHttpError(res, 500, 'ERROR_IN_CREATE_TRACK', error.message);
+    return handleHttpError(res, 500, 'ERROR_IN_CREATE_MOVIE', error.message);
   }
 };
 
@@ -58,11 +71,11 @@ export const updateItem = async (req: Request, res: Response): Promise<Response>
     });
 
     if (!data) {
-      return handleHttpError(res, 404, 'TRACK_NOT_FOUND');
+      return handleHttpError(res, 404, 'MOVIES_NOT_FOUND');
     }
     return res.status(200).json(data);
   } catch (error: any) {
-    return handleHttpError(res, 500, 'ERROR_IN_UPDATE_TRACK', error.message);
+    return handleHttpError(res, 500, 'ERROR_IN_UPDATE_MOVIE', error.message);
   }
 };
 
@@ -73,15 +86,19 @@ export const deleteItem = async (req: Request, res: Response): Promise<Response>
   try {
     const { id } = matchedData(req);
     // @ts-ignore
+    const { user } = req;
     const data = await MoviesModel.destroy({
-      where: { id },
+      where: {
+        id,
+        userId: user?.id,
+      },
     });
 
     if (!data) {
-      return handleHttpError(res, 404, 'TRACK_NOT_FOUND');
+      return handleHttpError(res, 404, 'MOVIE_NOT_FOUND');
     }
     return res.status(204).json({});
   } catch (error: any) {
-    return handleHttpError(res, 500, 'ERROR_IN_DELETE_TRACK', error.message);
+    return handleHttpError(res, 500, 'ERROR_IN_DELETE_MOVIE', error.message);
   }
 };

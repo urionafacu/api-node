@@ -19,7 +19,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
     }
 
     // @ts-ignore
-    const user = await UsersModel.findById(dataToken!.id);
+    const user = await UsersModel.findByPk(dataToken!.id);
 
     // @ts-ignore
     req.user = user;

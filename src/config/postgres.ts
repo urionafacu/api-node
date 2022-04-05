@@ -26,10 +26,13 @@ fs.readdirSync(`${__dirname}/../models`).forEach(file => {
 
 modelsDefiners.filter(Boolean).forEach(Model => new Model(sequelize));
 
+/**
+ * Sync database
+ */
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log('Connection has been established successfully.');
   } catch (error) {
     console.error('Error connecting to Postgres database:', error);
