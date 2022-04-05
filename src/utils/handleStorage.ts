@@ -1,4 +1,4 @@
-import multer from "multer";
+import multer from 'multer';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -6,8 +6,8 @@ const storage = multer.diskStorage({
     cb(null, pathStorage);
   },
   filename: (req, file, cb) => {
-    const ext = file.originalname.split(".").pop();
-    const fileName = `file-${Date.now()}.${ext || "jpg"}`;
+    const ext = file.originalname.split('.').pop();
+    const fileName = `file-${Date.now()}.${ext || 'jpg'}`;
     cb(null, fileName);
   },
 });

@@ -1,3 +1,3 @@
-export { default as UsersModel } from "./nosql/users";
-export { default as TracksModel } from "./nosql/tracks";
-export { default as StorageModel } from "./nosql/storage";
+export { default as MoviesModel } from './movies';
+export { default as StoragesModel } from './storages';
+export { default as UsersModel } from './users';

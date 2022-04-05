@@ -1,60 +1,34 @@
-import { Router } from "express";
-import {
-  getItems,
-  createItem,
-  deleteItem,
-  getItem,
-  updateItem,
-} from "../../controllers/tracks";
-import { validatorCreateItem, validatorGetItem } from "../../validators/tracks";
-import authMiddleware from "../../middlewares/session";
-import checkRol from "../../middlewares/rol";
-import { UserEnum } from "../../models/nosql/users";
+import { Router } from 'express';
+import { UserRolEnum } from 'types/user';
+import { getItems, createItem, deleteItem, getItem, updateItem } from 'controllers/movies';
+import authMiddleware from 'middlewares/session';
+import checkRol from 'middlewares/rol';
 
 const router = Router();
 
 /**
- * Get all tracks
+ * Get all movies
  */
-router.get("/", authMiddleware, getItems);
+router.get('/', authMiddleware, getItems);
 
 /**
- * Get a track by id
+ * Get a movie by id
  */
-router.get("/:id", authMiddleware, validatorGetItem, getItem);
+router.get('/:id', authMiddleware, getItem);
 
 /**
- * Create a new track
+ * Create a new movie
  */
-router.post(
-  "/",
-  authMiddleware,
-  checkRol([UserEnum.ADMIN]),
-  validatorCreateItem,
-  createItem
-);
+router.post('/', authMiddleware, checkRol([UserRolEnum.ADMIN]), createItem);
 
 /**
- * Update a track by id
+ * Update a movie by id
  */
-router.put(
-  "/:id",
-  authMiddleware,
-  checkRol([UserEnum.ADMIN]),
-  validatorCreateItem,
-  validatorGetItem,
-  updateItem
-);
+router.put('/:id', authMiddleware, checkRol([UserRolEnum.ADMIN]), updateItem);
 
 /**
- * Delete a track by id
+ * Delete a movie by id
  */
-router.delete(
-  "/:id",
-  authMiddleware,
-  checkRol([UserEnum.ADMIN]),
-  validatorGetItem,
-  deleteItem
-);
+router.delete('/:id', authMiddleware, checkRol([UserRolEnum.ADMIN]), deleteItem);
 
 export default router;

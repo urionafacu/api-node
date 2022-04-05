@@ -1,19 +1,19 @@
-import jwt from "jsonwebtoken";
-import { UsersModel } from "../models/nosql/users";
+import jwt from 'jsonwebtoken';
+import { UserModel } from 'types/user';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const { JWT_SECRET } = process.env;
 
-export type User = { _id: string } & Omit<UsersModel, "password">;
+export type User = { id: string } & Omit<UserModel, 'password'>;
 
 export const tokenSign = (user: User) => {
   const sign = jwt.sign(
     {
-      _id: user._id,
+      id: user.id,
       role: user.role,
     },
     JWT_SECRET!,
     {
-      expiresIn: "1d",
+      expiresIn: '1d',
     }
   );
 

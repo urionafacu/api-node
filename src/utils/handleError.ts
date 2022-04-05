@@ -1,4 +1,7 @@
-import { Response } from "express";
+/* eslint-disable default-param-last */
+/* eslint-disable no-unreachable */
+/* eslint-disable import/prefer-default-export */
+import { Response } from 'express';
 
 /**
  * @param res Response
@@ -8,12 +11,7 @@ import { Response } from "express";
  * @returns Response
  */
 
-export const handleHttpError = (
-  res: Response,
-  code = 403,
-  message = "Error",
-  detail?: string
-): Response => {
+export const handleHttpError = (res: Response, code = 403, message = 'Error', detail?: string): Response => {
   return res.status(code).json({ message });
 
   if (detail) {
