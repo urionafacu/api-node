@@ -1,11 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { UserModel } from 'types/user';
+import { ModelAttributes as UserModel } from 'models/users';
 
 const { JWT_SECRET } = process.env;
 
-export type User = { id: string } & Omit<UserModel, 'password'>;
-
-export const tokenSign = (user: User) => {
+export const tokenSign = (user: UserModel) => {
   const sign = jwt.sign(
     {
       id: user.id,
@@ -20,9 +18,6 @@ export const tokenSign = (user: User) => {
   return sign;
 };
 
-/**
- * @param tokenJwt
- */
 export const verifyToken = (tokenJwt: string) => {
   try {
     return jwt.verify(tokenJwt, JWT_SECRET!);

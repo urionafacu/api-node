@@ -1,9 +1,15 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from 'config/postgres';
 import UsersModel from 'models/users';
 
-const Movies = sequelize.define(
-  'movies',
+export type ModelAttributes = {
+  id: string;
+  userId?: string;
+};
+
+class Movies extends Model<ModelAttributes> {}
+
+Movies.init(
   {
     id: {
       type: DataTypes.STRING,
@@ -12,10 +18,12 @@ const Movies = sequelize.define(
     },
   },
   {
+    sequelize,
+    tableName: 'movies',
     timestamps: true,
   }
 );
 
-UsersModel.hasMany(Movies, { as: 'movies' });
+UsersModel.hasMany(Movies, { as: 'movies', foreignKey: 'userId' });
 
 export default Movies;

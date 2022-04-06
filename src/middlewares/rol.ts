@@ -4,10 +4,9 @@ import { handleHttpError } from 'utils/handleError';
 
 const checkRol = (roles: UserRolEnum[]) => (req: Request, res: Response, next: NextFunction) => {
   try {
-    // @ts-ignore
-    const { user } = req;
+    const { currentUser } = req;
 
-    const rolesByUser = user.role;
+    const rolesByUser = currentUser.toJSON().role!;
 
     const isValid = roles.some(rolSingle => rolesByUser.includes(rolSingle));
 

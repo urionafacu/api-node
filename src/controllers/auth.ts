@@ -9,10 +9,13 @@ export const registerController = async (req: Request, res: Response): Promise<R
   try {
     const body = matchedData(req);
     const encryptedPassword = await encrypt(body.password);
-    const newBody = { ...body, password: encryptedPassword };
+    const newBody = {
+      password: encryptedPassword,
+      name: body.name as string,
+      age: body.age as number,
+      email: body.email as string,
+    };
     const dataUser = await UsersModel.create(newBody);
-
-    dataUser.set({ password: undefined });
 
     const newDataUser = dataUser.toJSON();
 
@@ -21,6 +24,7 @@ export const registerController = async (req: Request, res: Response): Promise<R
       user: newDataUser,
     };
 
+    dataUser.set({ password: undefined });
     return res.status(201).json(data);
   } catch (error: any) {
     return handleHttpError(res, 500, 'ERROR_IN_REGISTER', error.message);
@@ -38,19 +42,16 @@ export const loginController = async (req: Request, res: Response): Promise<Resp
       return handleHttpError(res, 404, 'USER_NOT_FOUND');
     }
 
-    // @ts-ignore
-    const isValidPassword = await compare(body.password, user.password);
+    const isValidPassword = await compare(body.password, user.toJSON().password!);
 
     if (!isValidPassword) {
       return handleHttpError(res, 401, 'INVALID_PASSWORD');
     }
 
-    // @ts-ignore
     user.set({ password: undefined });
 
     const data = {
-      // @ts-ignore
-      token: tokenSign(user),
+      token: tokenSign(user.toJSON()),
       user,
     };
 

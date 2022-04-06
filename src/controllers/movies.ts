@@ -8,11 +8,10 @@ import { MoviesModel } from 'models';
  */
 export const getItems = async (req: Request, res: Response): Promise<Response> => {
   try {
-    // @ts-ignore
-    const user = req?.user?.toJSON();
+    const { currentUser } = req;
     const movies = await MoviesModel.findAll({
       where: {
-        userId: user?.id,
+        userId: currentUser.toJSON().id,
       },
     });
 
@@ -45,12 +44,12 @@ export const getItem = async (req: Request, res: Response): Promise<Response> =>
  */
 export const createItem = async (req: Request, res: Response): Promise<Response> => {
   const { id } = matchedData(req);
-  // @ts-ignore
-  const { user } = req;
+  const { currentUser } = req;
+
   try {
     const data = await MoviesModel.create({
-      userId: user?.id,
       id,
+      userId: currentUser.toJSON().id,
     });
 
     return res.status(201).json(data);
@@ -85,12 +84,11 @@ export const updateItem = async (req: Request, res: Response): Promise<Response>
 export const deleteItem = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = matchedData(req);
-    // @ts-ignore
-    const { user } = req;
+    const { currentUser } = req;
     const data = await MoviesModel.destroy({
       where: {
         id,
-        userId: user?.id,
+        userId: currentUser.toJSON().id,
       },
     });
 

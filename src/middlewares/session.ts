@@ -3,6 +3,10 @@ import { verifyToken } from 'utils/handleJwt';
 import { handleHttpError } from 'utils/handleError';
 import { UsersModel } from 'models';
 
+interface TokenInterface {
+  id: number;
+}
+
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.headers.authorization) {
@@ -11,18 +15,17 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 
     const token = req.headers.authorization.split(' ').pop();
 
-    const dataToken = verifyToken(token!);
+    const dataToken = verifyToken(token!) as TokenInterface;
 
-    // @ts-ignore
     if (!dataToken!.id) {
       return handleHttpError(res, 401, 'INVALID_TOKEN');
     }
 
-    // @ts-ignore
-    const user = await UsersModel.findByPk(dataToken!.id);
+    const user = await UsersModel.findByPk(dataToken.id);
 
-    // @ts-ignore
-    req.user = user;
+    if (user) {
+      req.currentUser = user;
+    }
 
     return next();
   } catch (error: any) {

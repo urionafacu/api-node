@@ -3,6 +3,7 @@ import { matchedData } from 'express-validator';
 import fs from 'fs';
 import { StoragesModel } from 'models';
 import { handleHttpError } from 'utils/handleError';
+import { ModelAttributes } from 'models/storages';
 
 const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:3000';
 const MEDIA_PATH = `${__dirname}/../storage`;
@@ -48,7 +49,7 @@ export const createItem = async (req: Request, res: Response): Promise<Response>
       url: `${PUBLIC_URL}/${file?.filename}`,
     };
 
-    const data = await StoragesModel.create(fileData);
+    const data = await StoragesModel.create(fileData as ModelAttributes);
     return res.status(201).send({ data });
   } catch (error: any) {
     return handleHttpError(res, 500, 'ERROR_IN_CREATE_ITEM', error.message);

@@ -1,8 +1,15 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from 'config/postgres';
 
-const Storages = sequelize.define(
-  'storages',
+export type ModelAttributes = {
+  id?: number;
+  url: string;
+  filename: string;
+};
+
+class Storages extends Model<ModelAttributes> {}
+
+Storages.init(
   {
     url: {
       type: DataTypes.STRING,
@@ -17,7 +24,9 @@ const Storages = sequelize.define(
     },
   },
   {
+    sequelize,
     timestamps: true,
+    tableName: 'storages',
   }
 );
 

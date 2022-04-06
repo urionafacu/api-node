@@ -6,10 +6,10 @@ export enum UserRolEnum {
 }
 
 export type UserModel = {
-  id: number;
+  id?: number;
   name: string;
   age: number;
   email: string;
-  password: string;
-  role: UserRolEnum;
+  password?: string;
+  role?: UserRolEnum;
 };

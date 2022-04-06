@@ -1,9 +1,19 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from 'config/postgres';
 import { UserRolEnum } from 'types/user';
 
-const Users = sequelize.define(
-  'users',
+export type ModelAttributes = {
+  id?: string;
+  name: string;
+  age: number;
+  email: string;
+  password?: string | undefined;
+  role?: UserRolEnum;
+};
+
+class Users extends Model<ModelAttributes> {}
+
+Users.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -53,7 +63,8 @@ const Users = sequelize.define(
     },
   },
   {
-    timestamps: true,
+    sequelize,
+    tableName: 'users',
   }
 );
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import express, { Request, Response } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
